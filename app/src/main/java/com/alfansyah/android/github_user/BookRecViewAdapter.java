@@ -7,10 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -33,9 +36,20 @@ public class BookRecViewAdapter extends RecyclerView.Adapter<BookRecViewAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull viewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull viewHolder holder, final int position) {
         Log.d(TAG,"onBindViewHolder:Called");
         holder.txtName.setText(books.get(position).getName());
+        Glide.with(mContext)
+                .asBitmap()
+                .load(books.get(position).getImageUrl())
+                .into(holder.imgBook);
+
+        holder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext,books.get(position).getName()+"Selected",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -43,7 +57,7 @@ public class BookRecViewAdapter extends RecyclerView.Adapter<BookRecViewAdapter.
         return books.size();
     }
 
-    public BookRecViewAdapter(ArrayList<Book> books) {
+    public void setBooks(ArrayList<Book> books) {
         this.books = books;
         notifyDataSetChanged();
     }
